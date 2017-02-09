@@ -7,12 +7,17 @@
   <!-- Looks like we need to specify access="FIELD" otherwise Hibernate interprets
        property getters. -->
 
+  <named-query name="getJpaClassificationNodeConfigRoot"><query>SELECT jpaClassificationNodeConfig FROM JpaClassificationNodeConfig jpaClassificationNodeConfig WHERE jpaClassificationNodeConfig.jpaClassificationNodeConfigParent IS NULL</query></named-query>
+
   <entity class="org.azyva.dragom.model.config.impl.jpa.JpaNodeConfig" access="FIELD">
     <table name="NODE"/>
     <inheritance strategy="SINGLE_TABLE"/>
     <!-- Would have preferred discriminator type CHAR, but Hibernate complains that it
          is not safe. -->
     <discriminator-column name="TYPE" discriminator-type="STRING" length="1"/>
+    <pre-persist method-name="preSave"/>
+    <pre-update method-name="preSave"/>
+    <post-load method-name="postLoad"/>
     <attributes>
       <id name="id">
         <column
@@ -42,17 +47,18 @@
           name="TIMESTAMP_LAST_MOD"
           nullable="false"/>
       </basic>
-      <many-to-one
+      <many-to-one 
         name="jpaClassificationNodeConfigParent"
         target-entity="org.azyva.dragom.model.config.impl.jpa.JpaClassificationNodeConfig">
         <join-column
           name="ID_NODE_PARENT"
           referenced-column-name="ID"/>
-        <cascade><cascade-all/></cascade>
+<!--         <cascade><cascade-all/></cascade> -->
       </many-to-one>
       <element-collection
         name="mapPropertyDefConfig"
-        target-class="org.azyva.dragom.model.config.impl.simple.SimplePropertyDefConfig">
+        target-class="org.azyva.dragom.model.config.impl.simple.SimplePropertyDefConfig"
+        fetch="EAGER">
         <map-key-column
           name="NAME"
           insertable="false"
@@ -64,8 +70,9 @@
         </collection-table>
       </element-collection>
       <element-collection
-        name="mapPluginDefConfig"
-        target-class="org.azyva.dragom.model.config.impl.simple.SimplePluginDefConfig">
+        name="listPluginDefConfig"
+        target-class="org.azyva.dragom.model.config.impl.simple.SimplePluginDefConfig"
+        fetch="EAGER">
         <collection-table name="PLUGIN">
           <join-column
             name="ID_NODE"
@@ -101,7 +108,8 @@
       </basic>
       <basic name="value">
         <column
-          name="VALUE"/>
+          name="VALUE"
+          nullable="true"/>
       </basic>
       <basic name="indOnlyThisNode">
         <column
@@ -116,40 +124,23 @@
       <basic name="classNodePlugin">
         <column
           name="INTERFACE"
-          nullable="false"/>
+          nullable="true"/>
         <convert converter="org.azyva.dragom.model.config.impl.jpa.ClassAttributeConverter"></convert>
       </basic>
-      <basic name="pluginId">
+      <basic name="pluginId" optional="true">
         <column
-          name="PLUGIN_ID"/>
+          name="PLUGIN_ID"
+          nullable="true"/>
       </basic>
       <basic name="pluginClass">
         <column
-          name="CLASS"/>
+          name="CLASS"
+          nullable="false"/>
       </basic>
       <basic name="indOnlyThisNode">
         <column
           name="IND_ONLY_THIS_NODE"
           nullable="false"/>
-      </basic>
-    </attributes>
-  </embeddable>
-
-  <embeddable class="org.azyva.dragom.model.config.PluginKey" access="FIELD">
-    <attributes>
-      <basic name="classNodePlugin">
-        <column
-          name="INTERFACE"
-          nullable="false"
-          insertable="false"
-          updatable="false"/>
-        <convert converter="org.azyva.dragom.model.config.impl.jpa.ClassAttributeConverter"></convert>
-      </basic>
-      <basic name="pluginId">
-        <column
-          name="PLUGIN_ID"
-          insertable="false"
-          updatable="false"/>
       </basic>
     </attributes>
   </embeddable>

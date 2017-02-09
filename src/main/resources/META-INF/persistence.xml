@@ -5,17 +5,18 @@
 
     <mapping-file>META-INF/orm.xml</mapping-file>
 
-<!-- 
+
     <class>org.azyva.dragom.model.config.impl.jpa.JpaNodeConfig</class>
     <class>org.azyva.dragom.model.config.impl.jpa.JpaClassificationNodeConfig</class>
     <class>org.azyva.dragom.model.config.impl.jpa.JpaModuleConfig</class>
     <class>org.azyva.dragom.model.config.impl.simple.SimplePropertyDefConfig</class>
     <class>org.azyva.dragom.model.config.impl.simple.SimplePluginDefConfig</class>
--->
+
     <properties>
       <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
-      <property name="javax.persistence.jdbc.url" value="jdbc:h2:~/test"/>
-      <property name="javax.persistence.jdbc.user" value="sa"/>
+      <!-- To be specified in the code.
+      <property name="javax.persistence.jdbc.url" value="jdbc:h2:dragom"/> -->
+      <property name="javax.persistence.jdbc.user" value="dragom"/>
       <property name="javax.persistence.jdbc.password" value=""/>
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
