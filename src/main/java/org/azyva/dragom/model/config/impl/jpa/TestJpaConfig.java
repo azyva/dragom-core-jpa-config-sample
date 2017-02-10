@@ -212,6 +212,12 @@ public class TestJpaConfig {
       mutableClassificationNodeConfigRoot = (MutableClassificationNodeConfig)mutableConfig.getClassificationNodeConfigRoot();
 
       listNodeConfig = mutableClassificationNodeConfigRoot.getListChildNodeConfig();
+
+      mutableClassificationNodeConfig = (MutableClassificationNodeConfig)mutableClassificationNodeConfigRoot.getNodeConfigChild("Domain");
+
+      mutableModuleConfig = (MutableModuleConfig)mutableClassificationNodeConfig.getNodeConfigChild("domain-module");
+
+      System.out.println();
 } catch (Exception e) {
       e.printStackTrace();
     } finally {

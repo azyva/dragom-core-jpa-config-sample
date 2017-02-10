@@ -4,17 +4,14 @@
     <xml-mapping-metadata-complete />
   </persistence-unit-metadata>
 
+  <named-query name="getRootNodeData"><query>SELECT nodeData FROM NodeData nodeData WHERE nodeData.nodeDataParent IS NULL</query></named-query>
+  <named-query name="getChildNodeData"><query>SELECT nodeData FROM NodeData nodeData WHERE nodeData.nodeDataParent = :parentNodeData</query></named-query>
+
   <!-- Looks like we need to specify access="FIELD" otherwise Hibernate interprets
        property getters. -->
 
-  <named-query name="getJpaClassificationNodeConfigRoot"><query>SELECT jpaClassificationNodeConfig FROM JpaClassificationNodeConfig jpaClassificationNodeConfig WHERE jpaClassificationNodeConfig.jpaClassificationNodeConfigParent IS NULL</query></named-query>
-
-  <entity class="org.azyva.dragom.model.config.impl.jpa.JpaNodeConfig" access="FIELD">
+  <entity class="org.azyva.dragom.model.config.impl.jpa.NodeData" access="FIELD">
     <table name="NODE"/>
-    <inheritance strategy="SINGLE_TABLE"/>
-    <!-- Would have preferred discriminator type CHAR, but Hibernate complains that it
-         is not safe. -->
-    <discriminator-column name="TYPE" discriminator-type="STRING" length="1"/>
     <pre-persist method-name="preSave"/>
     <pre-update method-name="preSave"/>
     <post-load method-name="postLoad"/>
@@ -34,6 +31,12 @@
           initial-value="1"
           allocation-size="10"/>
       </id>
+      <basic name="type">
+        <column
+          name="TYPE"
+          nullable="false"
+          updatable="false"/>
+      </basic>
       <basic name="name">
         <!-- Generally not nullable, but only for root ClassificationNode. -->
         <column
@@ -47,14 +50,19 @@
           name="TIMESTAMP_LAST_MOD"
           nullable="false"/>
       </basic>
-      <many-to-one 
-        name="jpaClassificationNodeConfigParent"
-        target-entity="org.azyva.dragom.model.config.impl.jpa.JpaClassificationNodeConfig">
+      <many-to-one
+        name="nodeDataParent"
+        target-entity="org.azyva.dragom.model.config.impl.jpa.NodeData">
         <join-column
           name="ID_NODE_PARENT"
           referenced-column-name="ID"/>
-<!--         <cascade><cascade-all/></cascade> -->
       </many-to-one>
+<!--       <one-to-many
+        name="child"
+        target-entity="org.azyva.dragom.model.config.impl.jpa.NodeData"
+        mapped-by="nodeDataParent" orphan-removal="true">
+        <cascade><cascade-remove/></cascade>
+      </one-to-many> -->
       <element-collection
         name="mapPropertyDefConfig"
         target-class="org.azyva.dragom.model.config.impl.simple.SimplePropertyDefConfig"
@@ -79,23 +87,6 @@
             referenced-column-name="ID"/>
         </collection-table>
       </element-collection>
-    </attributes>
-  </entity>
-
-  <entity class="org.azyva.dragom.model.config.impl.jpa.JpaModuleConfig" access="FIELD">
-    <discriminator-value>M</discriminator-value>
-  </entity>
-
-  <entity class="org.azyva.dragom.model.config.impl.jpa.JpaClassificationNodeConfig" access="FIELD">
-    <discriminator-value>C</discriminator-value>
-    <attributes>
-      <one-to-many
-        name="mapJpaNodeConfigChild"
-        target-entity="org.azyva.dragom.model.config.impl.jpa.JpaNodeConfig"
-        mapped-by="jpaClassificationNodeConfigParent"
-        orphan-removal="true">
-        <map-key name="name"/>
-      </one-to-many>
     </attributes>
   </entity>
 
