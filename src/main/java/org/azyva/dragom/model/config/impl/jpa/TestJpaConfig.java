@@ -159,7 +159,7 @@ public class TestJpaConfig {
       mutableModuleConfig.setNodeConfigTransferObject(nodeConfigTransferObject, null);
 
       /*
-       * Create a domain MutableClassificationNodeConfig representing.
+       * Create a domain MutableClassificationNodeConfig.
        */
 
       mutableClassificationNodeConfig = mutableClassificationNodeConfigRoot.createChildMutableClassificationNodeConfig();
