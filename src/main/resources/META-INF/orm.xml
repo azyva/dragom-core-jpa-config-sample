@@ -4,8 +4,8 @@
     <xml-mapping-metadata-complete />
   </persistence-unit-metadata>
 
-  <named-query name="getRootNodeData"><query>SELECT nodeData FROM NodeData nodeData WHERE nodeData.nodeDataParent IS NULL</query></named-query>
-  <named-query name="getChildNodeData"><query>SELECT nodeData FROM NodeData nodeData WHERE nodeData.nodeDataParent = :parentNodeData</query></named-query>
+  <named-query name="getRootNodeData"><query>SELECT aNodeData FROM NodeData aNodeData WHERE aNodeData.nodeDataParent IS NULL</query></named-query>
+  <named-query name="getChildNodeData"><query>SELECT aNodeData FROM NodeData aNodeData WHERE aNodeData.nodeDataParent = :parentNodeData</query></named-query>
 
   <!-- Looks like we need to specify access="FIELD" otherwise Hibernate interprets
        property getters. -->
