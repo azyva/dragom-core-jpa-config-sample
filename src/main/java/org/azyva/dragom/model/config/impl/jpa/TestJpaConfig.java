@@ -76,7 +76,7 @@ public class TestJpaConfig {
 
     mapProperty = new HashMap<String, String>();
 
-    mapProperty.put("javax.persistence.jdbc.url", "jdbc:h2:" + pathTestWorkspace.toAbsolutePath() + "/dragom;INIT=RUNSCRIPT FROM '" + pathTestWorkspace.toAbsolutePath().toString().replaceAll("\\\\", "/") + "/dragom-ddl.sql'");
+    mapProperty.put("javax.persistence.jdbc.url", "jdbc:h2:" + pathTestWorkspace.toAbsolutePath() + "/dragom;INIT=RUNSCRIPT FROM '" + pathTestWorkspace.toAbsolutePath().toString().replace('\\', '/') + "/dragom-ddl.sql'");
 
     entityManagerFactory = Persistence.createEntityManagerFactory("dragom", mapProperty);
 
